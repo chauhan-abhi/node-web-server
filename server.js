@@ -1,11 +1,35 @@
 const express = require('express')
 const hbs = require('hbs')
-
+const fs = require('fs')
 var app = express()
 
 hbs.registerPartials(__dirname + '/views/partials')
 app.set('view engine', 'hbs')
 
+// next used to tell express when done-- > call next()
+app.use((req, res, next) => {
+    var now = new Date().toString()
+    var log = `${now}: ${req.method} ${req.url}`
+    console.log(log)
+    fs.appendFile('server.log', log + '\n', (err) => {
+        if(err) {
+            console.log('Unable to append to server.log')
+        }
+    })
+    next()
+})
+
+/************Middleware Applications **********/
+/***** -> to chk api req is authenticated*/
+/***** -> db req check if user is valid or not *****/
+
+
+// Site under maintenace code with middleware
+// app.use((req, res, next) => {
+//     res.render('maintenance.hbs')
+// })
+
+// this middleware serves upto a directory
 app.use(express.static(__dirname + '/public')) // __dirname- path to your web server
 
 hbs.registerHelper('getCurrentYear', () => {
@@ -49,6 +73,6 @@ app.get('/bad', (req, res) => {
     })
 })
 
-app.listen(8000, () => {
+app.listen(3000, () => {
     console.log('Server is up on 8000 ')
 })

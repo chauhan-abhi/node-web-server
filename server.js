@@ -1,9 +1,11 @@
 const express = require('express')
+const hbs = require('hbs')
 
 var app = express()
 
-// __dirname- path to your web server
-app.use(express.static(__dirname + '/public'))
+app.set('view engine', 'hbs')
+
+app.use(express.static(__dirname + '/public')) // __dirname- path to your web server
 
 app.get('/', (req, res) => {
     //res.send('<h1>Hello Express</h1> ')
@@ -17,7 +19,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/about', (req, res) => {
-    res.send('About page   ')
+    res.render('about.hbs', {
+        pageTitle: 'About Page',
+        currentYear: new Date().getFullYear()
+    })
 })
 
 //@TODO 
